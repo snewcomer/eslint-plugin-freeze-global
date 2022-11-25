@@ -39,4 +39,24 @@ Then configure the rules you want to use under the rules section.
 }
 ```
 
+## Examples
 
+❌ Invalid
+```
+import zod from 'zod';
+const GLOBAL = {
+    a: 1,
+    b: 2,
+    c: {}
+};
+```
+
+✅ Valid with `["error", "no-mutable-global"]`
+```
+import zod from 'zod';
+const GLOBAL = Object.freeze({
+    a: 1,
+    b: 2,
+    c: {}
+});
+```
