@@ -1,12 +1,12 @@
 const { RuleTester } = require('eslint');
 
-const freezeGlobalRule = require('../../../lib/rules/freeze-global.js');
+const freezeGlobalRule = require('../../../lib/rules/no-mutable-global.js');
 
 const ruleTester = new RuleTester({
     parserOptions: { ecmaVersion: 2020, sourceType: 'module' },
 });
 
-ruleTester.run('freeze-global', freezeGlobalRule, {
+ruleTester.run('no-mutable-global', freezeGlobalRule, {
     valid: [
         {
             code: "const a = 'b';",
@@ -51,7 +51,7 @@ ruleTester.run('freeze-global', freezeGlobalRule, {
             output: 'const GLOBAL = Object.freeze({});',
             errors: [
                 {
-                    messageId: 'freezeGlobal',
+                    messageId: 'noMutableGlobal',
                 }
             ],
         },
@@ -60,7 +60,7 @@ ruleTester.run('freeze-global', freezeGlobalRule, {
             output: 'const GLOBAL = Object.freeze([]);',
             errors: [
                 {
-                    messageId: 'freezeGlobal',
+                    messageId: 'noMutableGlobal',
                 }
             ],
         },
@@ -69,7 +69,7 @@ ruleTester.run('freeze-global', freezeGlobalRule, {
             output: 'import K from "bar"; const GLOBAL = Object.freeze({});',
             errors: [
                 {
-                    messageId: 'freezeGlobal',
+                    messageId: 'noMutableGlobal',
                 }
             ],
         },
@@ -78,7 +78,7 @@ ruleTester.run('freeze-global', freezeGlobalRule, {
             output: 'import K from "bar"; const GLOBAL = Object.freeze([]);',
             errors: [
                 {
-                    messageId: 'freezeGlobal',
+                    messageId: 'noMutableGlobal',
                 }
             ],
         },
@@ -101,7 +101,7 @@ ruleTester.run('freeze-global', freezeGlobalRule, {
             `,
             errors: [
                 {
-                    messageId: 'freezeGlobal',
+                    messageId: 'noMutableGlobal',
                 }
             ],
         },
@@ -124,7 +124,7 @@ ruleTester.run('freeze-global', freezeGlobalRule, {
             `,
             errors: [
                 {
-                    messageId: 'freezeGlobal',
+                    messageId: 'noMutableGlobal',
                 }
             ],
         }
