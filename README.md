@@ -23,7 +23,7 @@ Add `freeze-global` to the plugins section of your `.eslintrc` configuration fil
 ```json
 {
     "plugins": [
-        "freeze-global"
+        "eslint-plugin-freeze-global"
     ]
 }
 ```
@@ -34,7 +34,7 @@ Then configure the rules you want to use under the rules section.
 ```json
 {
     "rules": {
-        "freeze-global/rule-name": 2
+        "eslint-plugin-freeze-global/freeze-global": 2
     }
 }
 ```
