@@ -15,13 +15,13 @@ ruleTester.run('no-mutable-global', freezeGlobalRule, {
             code: 'import K from "bar"; const GLOBAL = "bar";',
         },
         {
-            code: 'const GLOBAL = Object.freeze({})',
+            code: 'const GLOBAL = Object.freeze({})', // we do not warn about these.
         },
         {
             code: 'import K from "bar"; const GLOBAL = Object.freeze({})',
         },
         {
-            code: 'import K from "bar"; const GLOBAL = Object.freeze({ a: "b" })',
+            code: 'import K from "bar"; const GLOBAL = Object.freeze({ a: "b", b: Symbol("b") })',
         },
         {
             code: 'import K from "bar"; const GLOBAL = Object.freeze([])',
@@ -30,7 +30,10 @@ ruleTester.run('no-mutable-global', freezeGlobalRule, {
             code: 'import K from "bar"; const GLOBAL = Object.freeze([{ a: 1 }])',
         },
         {
-            code: 'import K from "bar"; const GLOBAL = Object.freeze({ a: [] })',
+            code: 'import K from "bar"; const GLOBAL = Object.freeze({ a: Object.freeze([]) })',
+        },
+        {
+            code: 'import K from "bar"; const GLOBAL = Object.freeze([{}])', // TODO
         },
         {
             code: 'import K from "bar"; let GLOBAL = { a: [] }',
@@ -48,34 +51,49 @@ ruleTester.run('no-mutable-global', freezeGlobalRule, {
     invalid: [
         {
             code: 'const GLOBAL = {};',
-            output: 'const GLOBAL = Object.freeze({});',
+            output: null,
             errors: [
                 {
-                    messageId: 'noMutableGlobal',
+                    messageId: 'emptyMutableGlobal',
                 }
             ],
         },
         {
             code: 'const GLOBAL = [];',
-            output: 'const GLOBAL = Object.freeze([]);',
+            output: null,
             errors: [
                 {
-                    messageId: 'noMutableGlobal',
+                    messageId: 'emptyMutableGlobal',
                 }
             ],
         },
         {
             code: 'import K from "bar"; const GLOBAL = {};',
-            output: 'import K from "bar"; const GLOBAL = Object.freeze({});',
+            output: null,
             errors: [
                 {
-                    messageId: 'noMutableGlobal',
+                    messageId: 'emptyMutableGlobal',
                 }
             ],
         },
         {
             code: 'import K from "bar"; const GLOBAL = [];',
-            output: 'import K from "bar"; const GLOBAL = Object.freeze([]);',
+            output: null,
+            errors: [
+                {
+                    messageId: 'emptyMutableGlobal',
+                }
+            ],
+        },
+        {
+            code: `
+                import K from "bar";
+                const GLOBAL = Object.freeze({ a: [] });
+            `,
+            output: `
+                import K from "bar";
+                const GLOBAL = Object.freeze({ a: Object.freeze([]) });
+            `,
             errors: [
                 {
                     messageId: 'noMutableGlobal',
@@ -121,8 +139,11 @@ ruleTester.run('no-mutable-global', freezeGlobalRule, {
                     b: 2,
                     c: {}
                 });
-            `,
+            `, // TODO: c should be frozen
             errors: [
+                {
+                    messageId: 'noMutableGlobal',
+                },
                 {
                     messageId: 'noMutableGlobal',
                 }
