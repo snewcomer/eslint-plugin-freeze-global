@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-freeze-global",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Object.freeze globals to prevent accidental mutation during the life of your program.",
   "keywords": [
     "eslint",
