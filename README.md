@@ -31,6 +31,8 @@ Add `no-mutable-global` to the plugins section of your `.eslintrc` configuration
 
 Then configure the rules you want to use under the rules section.
 
+### No Mutable Global
+
 ```json
 {
     "rules": {
@@ -39,7 +41,7 @@ Then configure the rules you want to use under the rules section.
 }
 ```
 
-## Examples
+#### Examples
 
 ❌ Invalid
 ```
@@ -60,3 +62,29 @@ const GLOBAL = Object.freeze({
     c: {}
 });
 ```
+
+### No Naked Global
+
+```json
+{
+    "rules": {
+        "eslint-plugin-freeze-global/no-naked-global": 2
+    }
+}
+```
+
+#### Examples
+
+❌ Invalid
+```
+import zod from 'zod';
+const GLOBAL = {};
+```
+
+✅ Valid with `["error", "no-naked-global"]`
+```
+import zod from 'zod';
+const GLOBAL = Object.freeze({});
+```
+
+Or refactor into a class or applicable location.
