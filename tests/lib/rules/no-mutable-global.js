@@ -81,6 +81,15 @@ ruleTester.run('no-mutable-global', freezeGlobalRule, {
         },
         {
             code: `
+                const exportFunc = function (key) {
+                    const y = {
+                        a: { b: 'c' },
+                    }
+                }
+            `
+        },
+        {
+            code: `
                 class Klass {
                     get foo() {
                         const y = { s: 't' };
