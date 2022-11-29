@@ -18,6 +18,9 @@ ruleTester.run('no-naked-global', noNakedGlobal, {
             code: 'const GLOBAL = Object.freeze({})', // we do not warn about these.
         },
         {
+            code: 'const GLOBAL = { a: "b" }',
+        },
+        {
             code: 'import K from "bar"; const GLOBAL = Object.freeze({})',
         },
         {
@@ -46,6 +49,59 @@ ruleTester.run('no-naked-global', noNakedGlobal, {
         },
         {
             code: '(function() { const GLOBAL = {} })()',
+        },
+        {
+            code: `
+                function foo() {
+                    const GLOBAL = {};
+                }
+            `
+        },
+        {
+            code: `
+                function foo() {
+                    const GLOBAL = db.find({ where: { } });
+                }
+            `
+        },
+        {
+            code: `
+                const exportFunc = (key) => {
+                    return {
+                        a: db.find({ where: {} }),
+                    }
+                }
+            `
+        },
+        {
+            code: `
+                const exportFunc = function (key) {
+                    return {
+                        a: db.find({ where: {} }),
+                    }
+                }
+            `
+        },
+        {
+            code: `
+                const exportFunc = function (key) {
+                    const y = {
+                        a: {},
+                    }
+                }
+            `
+        },
+        {
+            code: `
+                class Klass {
+                    get foo() {
+                        const y = { s: 't' };
+                        return {
+                            a: db.find({ where: { key } }),
+                        }
+                    }
+                }
+            `
         },
     ],
     invalid: [
