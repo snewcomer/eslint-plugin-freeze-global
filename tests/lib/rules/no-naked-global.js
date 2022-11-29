@@ -1,12 +1,12 @@
 const { RuleTester } = require('eslint');
 
-const noNakedGlobal = require('../../../lib/rules/no-naked-globals.js');
+const noNakedGlobal = require('../../../lib/rules/no-naked-global.js');
 
 const ruleTester = new RuleTester({
     parserOptions: { ecmaVersion: 2020, sourceType: 'module' },
 });
 
-ruleTester.run('no-naked-globals', noNakedGlobal, {
+ruleTester.run('no-naked-global', noNakedGlobal, {
     valid: [
         {
             code: "const a = 'b';",
