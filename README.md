@@ -18,7 +18,7 @@ npm install eslint-plugin-freeze-global --save-dev
 
 ## Usage
 
-Add `no-mutable-global` to the plugins section of your `.eslintrc` configuration file. You can omit the `eslint-plugin-` prefix:
+Add `eslint-plugin-freeze-global` to the plugins section of your `.eslintrc` configuration file:
 
 ```json
 {
@@ -49,7 +49,9 @@ import zod from 'zod';
 const GLOBAL = {
     a: 1,
     b: 2,
-    c: {}
+    c: {
+        d: 'e'
+    }
 };
 ```
 
@@ -59,7 +61,9 @@ import zod from 'zod';
 const GLOBAL = Object.freeze({
     a: 1,
     b: 2,
-    c: {}
+    c: Object.freeze({
+        d: 'e',
+    })
 });
 ```
 
