@@ -47,21 +47,69 @@ ruleTester.run('no-mutable-global', freezeGlobalRule, {
         {
             code: '(function() { const GLOBAL = {} })()',
         },
+        {
+            code: `
+                function foo() {
+                    const GLOBAL = { a: [] };
+                }
+            `
+        },
+        {
+            code: `
+                function foo() {
+                    const GLOBAL = db.find({ where: { key } });
+                }
+            `
+        },
+        {
+            code: `
+                const exportFunc = (key) => {
+                    return {
+                        a: db.find({ where: { key } }),
+                    }
+                }
+            `
+        },
+        {
+            code: `
+                const exportFunc = function (key) {
+                    return {
+                        a: db.find({ where: { key } }),
+                    }
+                }
+            `
+        },
+        {
+            code: `
+                class Klass {
+                    get foo() {
+                        const y = { s: 't' };
+                        return {
+                            a: db.find({ where: { key } }),
+                        }
+                    }
+                }
+            `
+        },
     ],
     invalid: [
         {
             code: `
                 import K from "bar";
+                const { RuleTester } = require('eslint');
                 const GLOBAL = Object.freeze({ a: [] });
                 const GLOBAL_2 = Object.freeze({ a: { b: {} } });
                 const GLOBAL_3 = Object.freeze({ a: Object.freeze({ b: {} }) });
+                const GLOBAL_4 = Object.freeze({ a: Object.freeze([{}]) });
             `,
             output: `
                 import K from "bar";
+                const { RuleTester } = require('eslint');
                 const GLOBAL = Object.freeze({ a: Object.freeze([]) });
                 const GLOBAL_2 = Object.freeze({ a: Object.freeze({ b: {} }) });
                 const GLOBAL_3 = Object.freeze({ a: Object.freeze({ b: Object.freeze({}) }) });
-            `,
+                const GLOBAL_4 = Object.freeze({ a: Object.freeze([{}]) });
+            `, // TODO: object in array
             errors: [
                 {
                     messageId: 'noMutableGlobalProperty',
@@ -79,7 +127,7 @@ ruleTester.run('no-mutable-global', freezeGlobalRule, {
         },
         {
             code: `
-                import K from "bar";
+                let K = "bar";
                 const GLOBAL = [
                     1,
                     2,
@@ -87,7 +135,7 @@ ruleTester.run('no-mutable-global', freezeGlobalRule, {
                 ];
             `,
             output: `
-                import K from "bar";
+                let K = "bar";
                 const GLOBAL = Object.freeze([
                     1,
                     2,
