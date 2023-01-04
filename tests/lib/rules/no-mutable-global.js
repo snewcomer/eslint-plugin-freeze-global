@@ -225,6 +225,27 @@ ruleTester.run('no-mutable-global', freezeGlobalRule, {
                     messageId: 'noMutableGlobalProperty',
                 }
             ],
+        },
+        {
+            code: `
+                export const GLOBAL = {
+                    a: 1,
+                    b: 2,
+                    c: {}
+                };
+            `,
+            output: `
+                export const GLOBAL = Object.freeze({
+                    a: 1,
+                    b: 2,
+                    c: {}
+                });
+            `,
+            errors: [
+                {
+                    messageId: 'noMutableGlobal',
+                }
+            ],
         }
     ]
 });
