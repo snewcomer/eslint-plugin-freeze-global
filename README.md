@@ -72,7 +72,7 @@ const GLOBAL = Object.freeze({
 ```json
 {
     "rules": {
-        "eslint-plugin-freeze-global/no-naked-global": 2
+        "freeze-global/no-naked-global": 2
     }
 }
 ```
